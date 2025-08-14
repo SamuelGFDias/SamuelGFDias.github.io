@@ -346,7 +346,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with Validator {
         const SizedBox(height: 40),
         Text(
           aboutContent["title"] ?? 'Sobre Mim',
-          style: theme.textTheme.headlineSmall,
+          style: theme.textTheme.headlineMedium,
         ),
         const SizedBox(height: 16),
         ConstrainedBox(
@@ -372,7 +372,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with Validator {
       key: _skillsKey,
       children: [
         const SizedBox(height: 40),
-        Text(title, style: theme.textTheme.headlineSmall),
+        Text(title, style: theme.textTheme.headlineMedium),
         const SizedBox(height: 24),
         ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 600),
