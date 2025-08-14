@@ -9,6 +9,8 @@ on:
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest # Usar a última versão do Ubuntu
+    permissions:
+      contents: write
 
     steps:
       # 1. Clona o seu repositório
@@ -28,7 +30,7 @@ jobs:
       # 4. Compila o projeto para web com o base-href correto
       #    IMPORTANTE: Troque 'meu_projeto_flutter' pelo nome do seu repositório
       - name: Build web app
-        run: flutter build web --release --base-href "/SamuelGFDias.github.io/"
+        run: flutter build web --release --base-href "/"
 
       # 5. Faz o deploy para a branch gh-pages
       #    Esta action cuida de todo o processo de commit e push para a branch de deploy
