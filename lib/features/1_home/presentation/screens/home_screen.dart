@@ -209,6 +209,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with Validator {
         const SizedBox(height: 32),
         Wrap(
           spacing: 16,
+          runSpacing: 16,
+          alignment: WrapAlignment.center,
           children: [
             ElevatedButton(
               onPressed: () => _scrollToSection(_projectsKey),
