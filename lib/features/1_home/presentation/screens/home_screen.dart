@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_flutter/lucide_flutter.dart';
 import 'package:portifolio/app/providers/theme_provider.dart';
 import 'package:portifolio/app/providers/user_provider.dart';
+import 'package:portifolio/core/services/mixins/validator.dart';
 import 'package:portifolio/core/utils/ui_helpers.dart';
 import 'package:portifolio/features/1_home/data/repositories/contact_repository.dart';
 import 'package:portifolio/features/1_home/presentation/providers/home_content.dart';
@@ -18,7 +19,7 @@ class HomeScreen extends ConsumerStatefulWidget {
   ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends ConsumerState<HomeScreen> {
+class _HomeScreenState extends ConsumerState<HomeScreen> with Validator {
   bool _isLoading = false;
   final _formKey = GlobalKey<FormState>();
 
@@ -206,8 +207,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 32),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+        Wrap(
+          spacing: 16,
           children: [
             ElevatedButton(
               onPressed: () => _scrollToSection(_projectsKey),
@@ -216,7 +217,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 child: const Text('Ver Projetos'),
               ),
             ),
-            const SizedBox(width: 16),
             ElevatedButton(
               onPressed: () => _scrollToSection(_contactKey),
               child: Padding(
@@ -295,14 +295,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   controller: _emailController,
                   decoration: InputDecoration().copyWith(hintText: 'Seu email'),
                   keyboardType: TextInputType.emailAddress,
-                  validator: (value) {
-                    if (value == null ||
-                        value.isEmpty ||
-                        !value.contains('@')) {
-                      return 'Por favor, insira um email válido';
-                    }
-                    return null;
-                  },
+                  validator: validateEmail,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
