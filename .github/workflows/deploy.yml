@@ -39,5 +39,5 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           # O diretório que contém os arquivos do site compilado
-          publish_dir: .
+          publish_dir: ./build/web
           disable_jekyll: true
