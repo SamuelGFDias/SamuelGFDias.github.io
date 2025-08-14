@@ -31,12 +31,15 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: "stable"
+          cache: true
 
       - name: Install dependencies
         run: flutter pub get
 
+      # MUDANÇA: Adicionado --web-renderer canvaskit para forçar um renderizador mais consistente.
+      # Isso geralmente resolve o problema da tela branca.
       - name: Build web app
-        run: flutter build web --release --base-href "/${{ github.event.repository.name }}/"
+        run: flutter build web --release --web-renderer canvaskit --base-href "/${{ github.event.repository.name }}/"
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
