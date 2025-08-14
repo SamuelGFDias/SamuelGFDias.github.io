@@ -8,7 +8,7 @@ part 'home_content.g.dart';
 
 @Riverpod(keepAlive: true)
 Future<Map<String, dynamic>> homeContent(Ref ref) async {
-  const homeContentPath = "contents/home.json";
+  const homeContentPath = "assets/contents/home.json";
 
   final String homeContentString = await rootBundle.loadString(homeContentPath);
 
