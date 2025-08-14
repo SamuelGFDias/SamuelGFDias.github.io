@@ -5,6 +5,7 @@ import 'package:portifolio/app/providers/theme_provider.dart';
 import 'package:portifolio/app/providers/user_provider.dart';
 import 'package:portifolio/core/utils/ui_helpers.dart';
 import 'package:portifolio/features/1_home/data/repositories/contact_repository.dart';
+import 'package:portifolio/features/1_home/presentation/providers/home_content.dart';
 import 'package:portifolio/shared/app_scaffold.dart';
 import 'package:portifolio/shared/fab_action.dart';
 import 'package:portifolio/shared/fab_route.dart';
@@ -132,46 +133,57 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 horizontal: 24.0,
                 vertical: 48.0,
               ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  // Seção Hero
-                  Padding(
-                    key: _heroKey,
-                    padding: const EdgeInsets.symmetric(vertical: 40),
-                    child: _buildHeroSection(theme),
-                  ),
+              child: ref
+                  .watch(homeContentProvider)
+                  .when(
+                    data: (content) => Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        // Seção Hero
+                        Padding(
+                          key: _heroKey,
+                          padding: const EdgeInsets.symmetric(vertical: 40),
+                          child: _buildHeroSection(theme, content["hero"]),
+                        ),
 
-                  // Seção Sobre
-                  Padding(
-                    key: _aboutKey,
-                    padding: const EdgeInsets.symmetric(vertical: 40),
-                    child: _buildAboutSection(theme),
-                  ),
+                        // Seção Sobre
+                        Padding(
+                          key: _aboutKey,
+                          padding: const EdgeInsets.symmetric(vertical: 40),
+                          child: _buildAboutSection(theme, content["about"]),
+                        ),
 
-                  // Seção Habilidades
-                  Padding(
-                    key: _skillsKey,
-                    padding: const EdgeInsets.symmetric(vertical: 40),
-                    child: _buildSkillsSection(theme),
-                  ),
+                        // Seção Habilidades
+                        Padding(
+                          key: _skillsKey,
+                          padding: const EdgeInsets.symmetric(vertical: 40),
+                          child: _buildSkillsSection(theme, content["skills"]),
+                        ),
 
-                  // Seção Projetos
-                  Padding(
-                    key: _projectsKey,
-                    padding: const EdgeInsets.symmetric(vertical: 40),
-                    child: _buildProjectsSection(theme),
-                  ),
+                        // Seção Projetos
+                        Padding(
+                          key: _projectsKey,
+                          padding: const EdgeInsets.symmetric(vertical: 40),
+                          child: _buildProjectsSection(
+                            theme,
+                            content["projects"],
+                          ),
+                        ),
 
-                  // Seção Contato
-                  Padding(
-                    key: _contactKey,
-                    padding: const EdgeInsets.symmetric(vertical: 40),
-                    child: _buildContactSection(theme),
+                        // Seção Contato
+                        Padding(
+                          key: _contactKey,
+                          padding: const EdgeInsets.symmetric(vertical: 40),
+                          child: _buildContactSection(theme, content["links"]),
+                        ),
+                      ],
+                    ),
+                    loading: () => const CircularProgressIndicator(),
+                    error: (Object error, StackTrace stackTrace) {
+                      return SizedBox.shrink();
+                    },
                   ),
-                ],
-              ),
             ),
           ),
         ),
@@ -179,17 +191,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     );
   }
 
-  Widget _buildHeroSection(ThemeData theme) {
+  Widget _buildHeroSection(ThemeData theme, Map<String, dynamic> heroContent) {
     return Column(
       children: [
         Text(
-          'Desenvolvedor Full Stack',
+          heroContent["title"] ?? ' - ',
           style: theme.textTheme.headlineLarge,
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 8),
         Text(
-          'Especialista em .NET, Flutter, BI e integrações',
+          heroContent["subtitle"] ?? ' - ',
           style: theme.textTheme.headlineSmall,
           textAlign: TextAlign.center,
         ),
@@ -230,8 +242,32 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     );
   }
 
-  Widget _buildContactSection(ThemeData theme) {
+  IconData _getIconData(String? iconName) {
+    switch (iconName) {
+      case "mail":
+        return LucideIcons.mail;
+      case "linkedin":
+        return LucideIcons.linkedin;
+      case "github":
+        return LucideIcons.github;
+      default:
+        return LucideIcons.x;
+    }
+  }
+
+  Widget _buildContactSection(ThemeData theme, List<dynamic> links) {
     final isDark = theme.brightness == Brightness.dark;
+
+    final List<Widget> linkWidgets = links.map((link) {
+      return IconButton(
+        icon: Icon(
+          _getIconData(link["icon"]),
+          color: isDark ? theme.primaryColorDark : Colors.black,
+        ),
+        onPressed: () => _launchURL(link["url"] ?? ''),
+        tooltip: link["tooltip"],
+      );
+    }).toList();
 
     return Column(
       key: _contactKey,
@@ -273,10 +309,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   controller: _messageController,
                   decoration: InputDecoration().copyWith(
                     hintText: 'Sua mensagem',
-                    suffixIcon: IconButton(
-                      icon: const Icon(Icons.clear, size: 20),
-                      onPressed: () => _messageController.clear(),
-                    ),
                   ),
                   maxLines: 5,
                   validator: (value) {
@@ -302,51 +334,30 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         // Ícones de redes sociais
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            IconButton(
-              icon: Icon(
-                LucideIcons.mail,
-                color: isDark ? theme.primaryColorDark : Colors.black,
-              ),
-              onPressed: () => _launchURL('mailto:samudias48@gmail.com'),
-              tooltip: 'Email',
-            ),
-            const SizedBox(width: 12),
-            IconButton(
-              icon: Icon(
-                LucideIcons.linkedin,
-                color: isDark ? theme.primaryColorDark : Colors.black,
-              ),
-              onPressed: () =>
-                  _launchURL('https://www.linkedin.com/in/SamuelGFDias'),
-              tooltip: 'LinkedIn',
-            ),
-            const SizedBox(width: 12),
-            IconButton(
-              icon: Icon(
-                LucideIcons.github,
-                color: isDark ? theme.primaryColorDark : Colors.black,
-              ),
-              onPressed: () => _launchURL('https://github.com/samuelgfdias'),
-              tooltip: 'GitHub',
-            ),
-          ],
+          spacing: 12,
+          children: linkWidgets,
         ),
       ],
     );
   }
 
-  Widget _buildAboutSection(ThemeData theme) {
+  Widget _buildAboutSection(
+    ThemeData theme,
+    Map<String, dynamic> aboutContent,
+  ) {
     return Column(
       key: _aboutKey,
       children: [
         const SizedBox(height: 40),
-        Text('Sobre Mim', style: theme.textTheme.headlineSmall),
+        Text(
+          aboutContent["title"] ?? 'Sobre Mim',
+          style: theme.textTheme.headlineSmall,
+        ),
         const SizedBox(height: 16),
         ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 600),
           child: Text(
-            'Sou desenvolvedor full stack com experiência sólida em backend C# (.NET), frontend com Flutter, automações com Python e BI com Power BI e Excel avançado.',
+            aboutContent["description"] ?? ' - ',
             textAlign: TextAlign.center,
             style: theme.textTheme.bodyMedium,
           ),
@@ -355,54 +366,57 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     );
   }
 
-  Widget _buildSkillsSection(ThemeData theme) {
+  Widget _buildSkillsSection(
+    ThemeData theme,
+    Map<String, dynamic> skillsContent,
+  ) {
+    final title = skillsContent["title"] ?? 'Habilidades';
+    final List<dynamic> skills = skillsContent["items"] as List<dynamic>? ?? [];
+
     return Column(
       key: _skillsKey,
       children: [
         const SizedBox(height: 40),
-        Text('Habilidades Técnicas', style: theme.textTheme.headlineSmall),
+        Text(title, style: theme.textTheme.headlineSmall),
         const SizedBox(height: 24),
         ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 600),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildSkillItem(
-                theme,
-                'Backend: .NET, APIs REST, Entity Framework',
-              ),
-              _buildSkillItem(theme, 'Frontend: Flutter + Riverpod'),
-              _buildSkillItem(theme, 'Banco de Dados: SQL Server'),
-              _buildSkillItem(theme, 'Automações: Python, Integrações'),
-              _buildSkillItem(theme, 'BI: Power BI, Excel avançado'),
-            ],
+            children: skills
+                .map(
+                  (skill) => _buildSkillItem(
+                    theme,
+                    '${skill["skill"]}: ${skill["items"]?.join(", ") ?? ""}',
+                  ),
+                )
+                .toList(),
           ),
         ),
       ],
     );
   }
 
-  Widget _buildProjectsSection(ThemeData theme) {
+  Widget _buildProjectsSection(
+    ThemeData theme,
+    Map<String, dynamic> projectsContent,
+  ) {
+    final title = projectsContent["title"] ?? 'Projetos';
+    final List<dynamic> projects =
+        projectsContent["items"] as List<dynamic>? ?? [];
+
     return Column(
       children: [
         const SizedBox(height: 40),
-        Text('Projetos', style: theme.textTheme.headlineMedium),
+        Text(title, style: theme.textTheme.headlineMedium),
         const SizedBox(height: 24),
-        _buildProjectCard(
-          theme,
-          'Gestor de Ordens de Serviço',
-          'Sistema .NET com API REST, autenticação JWT, persistência em SQL Server e interface Flutter para controle de ordens e tarefas.',
-        ),
-        _buildProjectCard(
-          theme,
-          'Dashboard Logístico',
-          'Dashboard em Power BI com análise de suprimentos, performance de entregas e indicadores financeiros com base em dados SQL Server.',
-        ),
-        _buildProjectCard(
-          theme,
-          'Automação de PDFs e E-mails',
-          'Script Python para ler PDFs de pedidos, extrair dados e enviar resumos automatizados via e-mail.',
-        ),
+
+        for (final project in projects)
+          _buildProjectCard(
+            theme,
+            project["title"] ?? 'Título do Projeto',
+            project["description"] ?? 'Descrição do Projeto',
+          ),
       ],
     );
   }

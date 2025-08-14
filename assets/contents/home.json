@@ -1,0 +1,83 @@
+{
+    "hero": {
+        "title": "Desenvolvedor Full Stack",
+        "subtitle": "Especialista em .NET, Flutter, BI e integrações"
+    },
+    "about": {
+        "title": "Sobre mim",
+        "description": "Sou desenvolvedor full stack com experiência sólida em backend C# (.NET), frontend com Flutter, automações com Python e BI com Power BI e Excel avançado."
+    },
+    "skills": {
+        "title": "Habilidades",
+        "items": [
+            {
+                "skill": "Frontend",
+                "items": [
+                    "Flutter + Riverpod"
+                ]
+            },
+            {
+                "skill": "Backend",
+                "items": [
+                    ".NET",
+                    "APIs REST",
+                    "Entity Framework"
+                ]
+            },
+            {
+                "skill": "Banco de Dados",
+                "items": [
+                    "SQL Server"
+                ]
+            },
+            {
+                "skill": "Automações",
+                "items": [
+                    "Python",
+                    "Integrações"
+                ]
+            },
+            {
+                "skill": "BI",
+                "items": [
+                    "Power BI",
+                    "Excel avançado"
+                ]
+            }
+        ]
+    },
+    "projects": {
+        "title": "Projetos",
+        "items": [
+            {
+                "title": "Gestor de Ordens de Serviço",
+                "description": "Sistema .NET com API REST, autenticação JWT, persistência em SQL Server e interface Flutter para controle de ordens e tarefas."
+            },
+            {
+                "title": "Dashboard Logístico",
+                "description": "Dashboard em Power BI com análise de suprimentos, performance de entregas e indicadores financeiros com base em dados SQL Server."
+            },
+            {
+                "title": "Automação de PDFs e E-mails",
+                "description": "Script Python para ler PDFs de pedidos, extrair dados e enviar resumos automatizados via e-mail."
+            }
+        ]
+    },
+    "links": [
+        {
+            "icon": "mail",
+            "url": "mailto:samudias48@gmail.com",
+            "tooltip": "Email"
+        },
+        {
+            "icon": "linkedin",
+            "url": "https://www.linkedin.com/in/SamuelGFDias",
+            "tooltip": "LinkedIn"
+        },
+        {
+            "icon": "github",
+            "url": "https://github.com/samuelgfdias",
+            "tooltip": "GitHub"
+        }
+    ]
+}
