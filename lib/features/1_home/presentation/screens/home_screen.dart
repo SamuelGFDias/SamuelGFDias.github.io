@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_flutter/lucide_flutter.dart';
@@ -10,6 +11,7 @@ import 'package:portifolio/features/1_home/presentation/providers/home_content.d
 import 'package:portifolio/shared/app_scaffold.dart';
 import 'package:portifolio/shared/fab_action.dart';
 import 'package:portifolio/shared/fab_route.dart';
+import 'package:portifolio/shared/project_card.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -407,32 +409,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with Validator {
         const SizedBox(height: 24),
 
         for (final project in projects)
-          _buildProjectCard(
-            theme,
-            project["title"] ?? 'Título do Projeto',
-            project["description"] ?? 'Descrição do Projeto',
+          ProjectCard(
+            title: project["title"] ?? 'Título do Projeto',
+            description: project["description"] ?? 'Descrição do Projeto',
           ),
       ],
-    );
-  }
-
-  Widget _buildProjectCard(ThemeData theme, String title, String description) {
-    return Container(
-      width: double.infinity,
-      margin: const EdgeInsets.symmetric(vertical: 8.0),
-      padding: const EdgeInsets.all(24.0),
-      decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.10),
-        borderRadius: BorderRadius.circular(12.0),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(title, style: theme.textTheme.headlineSmall),
-          const SizedBox(height: 12),
-          Text(description, style: theme.textTheme.bodyMedium),
-        ],
-      ),
     );
   }
 
