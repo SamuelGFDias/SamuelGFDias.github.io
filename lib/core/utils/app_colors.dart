@@ -44,4 +44,8 @@ class AppColors {
   static const Color disabled = Color(
     0xFF9CA3AF,
   ); // Cor para elementos desabilitados
+
+  // Cor base para overlays de glassmorphism (usa um tom neutro adaptado ao brilho)
+  static Color glassOverlay(Brightness brightness) =>
+      brightness == Brightness.dark ? Color(0xFF111217) : Color(0xFFFFFFFF);
 }

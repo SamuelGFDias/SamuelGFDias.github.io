@@ -34,24 +34,41 @@ class AppScaffold extends ConsumerWidget {
           platformProvider(constraints.maxWidth, constraints.maxHeight),
         );
 
-        return switch (platform) {
-          PlatformType.mobile || PlatformType.tablet => MobileScaffold(
-            title: title,
-            onTitlePressed: onTitlePressed,
-            onRefresh: onRefresh,
-            actions: actions,
-            floatingActionButtons: null,
-            navButtons: navButtons,
-            body: body,
-          ),
-          PlatformType.web => WebScaffold(
-            title: title,
-            onTitlePressed: onTitlePressed,
-            navButtons: navButtons,
-            actions: actions,
-            body: body,
-          ),
-        };
+        return AnimatedSwitcher(
+          duration: const Duration(milliseconds: 350),
+          switchInCurve: Curves.easeOut,
+          switchOutCurve: Curves.easeIn,
+          transitionBuilder: (child, animation) {
+            final offsetAnim = Tween<Offset>(
+              begin: const Offset(0, 0.02),
+              end: Offset.zero,
+            ).chain(CurveTween(curve: Curves.easeInOut)).animate(animation);
+            return FadeTransition(
+              opacity: animation,
+              child: SlideTransition(position: offsetAnim, child: child),
+            );
+          },
+          child: switch (platform) {
+            PlatformType.mobile || PlatformType.tablet => MobileScaffold(
+              key: ValueKey('mobile_${platform.name}'),
+              title: title,
+              onTitlePressed: onTitlePressed,
+              onRefresh: onRefresh,
+              actions: actions,
+              floatingActionButtons: null,
+              navButtons: navButtons,
+              body: body,
+            ),
+            PlatformType.web => WebScaffold(
+              key: ValueKey('web_${platform.name}'),
+              title: title,
+              onTitlePressed: onTitlePressed,
+              navButtons: navButtons,
+              actions: actions,
+              body: body,
+            ),
+          },
+        );
       },
     );
   }

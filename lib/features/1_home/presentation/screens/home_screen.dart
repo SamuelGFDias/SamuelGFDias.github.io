@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_flutter/lucide_flutter.dart';
@@ -8,6 +7,7 @@ import 'package:portifolio/core/services/mixins/validator.dart';
 import 'package:portifolio/core/utils/ui_helpers.dart';
 import 'package:portifolio/features/1_home/data/repositories/contact_repository.dart';
 import 'package:portifolio/features/1_home/presentation/providers/home_content.dart';
+import 'package:portifolio/features/1_home/presentation/widgets/hero_card.dart';
 import 'package:portifolio/shared/app_scaffold.dart';
 import 'package:portifolio/shared/fab_action.dart';
 import 'package:portifolio/shared/fab_route.dart';
@@ -147,7 +147,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with Validator {
                         Padding(
                           key: _heroKey,
                           padding: const EdgeInsets.symmetric(vertical: 40),
-                          child: _buildHeroSection(theme, content["hero"]),
+                          child: HeroCard(
+                            content: content["hero"],
+                            onPrimaryPressed: () =>
+                                _scrollToSection(_projectsKey),
+                            onSecondaryPressed: () =>
+                                _scrollToSection(_contactKey),
+                          ),
                         ),
 
                         // Seção Sobre
@@ -191,46 +197,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with Validator {
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildHeroSection(ThemeData theme, Map<String, dynamic> heroContent) {
-    return Column(
-      children: [
-        Text(
-          heroContent["title"] ?? ' - ',
-          style: theme.textTheme.headlineLarge,
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: 8),
-        Text(
-          heroContent["subtitle"] ?? ' - ',
-          style: theme.textTheme.headlineSmall,
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: 32),
-        Wrap(
-          spacing: 16,
-          runSpacing: 16,
-          alignment: WrapAlignment.center,
-          children: [
-            ElevatedButton(
-              onPressed: () => _scrollToSection(_projectsKey),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: const Text('Ver Projetos'),
-              ),
-            ),
-            ElevatedButton(
-              onPressed: () => _scrollToSection(_contactKey),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: const Text('Entrar em Contato'),
-              ),
-            ),
-          ],
-        ),
-      ],
     );
   }
 
