@@ -39,6 +39,9 @@ jobs:
       # MUDANÇA: Adicionado --web-renderer canvaskit para forçar um renderizador mais consistente.
       # Isso geralmente resolve o problema da tela branca.
       - name: Build web app
+        env:
+          USE_FIRESTORE: true
+          USE_FUNCTIONS: true
         run: flutter build web --release --base-href "/"
 
       - name: Setup Pages
