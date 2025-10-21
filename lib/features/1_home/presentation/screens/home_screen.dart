@@ -1,8 +1,9 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_flutter/lucide_flutter.dart';
 import 'package:portifolio/app/providers/theme_provider.dart';
 import 'package:portifolio/app/providers/user_provider.dart';
+import 'package:portifolio/app/providers/auth_provider.dart';
 import 'package:portifolio/core/services/mixins/validator.dart';
 import 'package:portifolio/core/utils/ui_helpers.dart';
 import 'package:portifolio/features/1_home/data/repositories/contact_repository.dart';
@@ -34,11 +35,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with Validator {
   late final ScrollController _scrollController;
 
   // Chaves globais para cada seção
-  final GlobalKey _heroKey = GlobalKey();
-  final GlobalKey _aboutKey = GlobalKey();
-  final GlobalKey _skillsKey = GlobalKey();
-  final GlobalKey _projectsKey = GlobalKey();
-  final GlobalKey _contactKey = GlobalKey();
+  late final GlobalKey _heroKey;
+  late final GlobalKey _aboutKey;
+  late final GlobalKey _skillsKey;
+  late final GlobalKey _projectsKey;
+  late final GlobalKey _contactKey;
 
   @override
   void initState() {
@@ -48,6 +49,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with Validator {
     _messageController = TextEditingController();
 
     _scrollController = ScrollController();
+    
+    // Inicializar GlobalKeys no initState para evitar duplicação
+    _heroKey = GlobalKey();
+    _aboutKey = GlobalKey();
+    _skillsKey = GlobalKey();
+    _projectsKey = GlobalKey();
+    _contactKey = GlobalKey();
   }
 
   @override
@@ -85,6 +93,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with Validator {
     final userProfile = ref.watch(userProfileProvider.select((u) => u?.name));
     final themeColor = ref.watch(themeColorProvider.select((t) => t));
     final ThemeData theme = Theme.of(context);
+    final loggedIn = ref.watch(authStateProvider).valueOrNull != null;
 
     return AppScaffold(
       title: userProfile ?? 'Home',
@@ -100,33 +109,40 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with Validator {
               : LucideIcons.moon,
         ),
       ],
-      navButtons: [
-        FabRoute(
-          label: 'Sobre',
-          onPressed: () => _scrollToSection(_aboutKey),
-          icon: LucideIcons.user,
-        ),
-        FabRoute(
-          label: 'Habilidades',
-          onPressed: () => _scrollToSection(_skillsKey),
-          icon: LucideIcons.brain,
-        ),
-        FabRoute(
-          label: 'Projetos',
-          onPressed: () => _scrollToSection(_projectsKey),
-          icon: LucideIcons.folder,
-        ),
-        // FabRoute(
-        //   label: 'Experiências',
-        //   onPressed: () {},
-        //   icon: LucideIcons.briefcase,
-        // ),
-        FabRoute(
-          label: 'Contato',
-          onPressed: () => _scrollToSection(_contactKey),
-          icon: LucideIcons.mail,
-        ),
-      ],
+      navButtons: () {
+        final items = <FabRoute>[
+          FabRoute(
+            label: 'Sobre',
+            onPressed: () => _scrollToSection(_aboutKey),
+            icon: LucideIcons.user,
+          ),
+          FabRoute(
+            label: 'Habilidades',
+            onPressed: () => _scrollToSection(_skillsKey),
+            icon: LucideIcons.brain,
+          ),
+          FabRoute(
+            label: 'Projetos',
+            onPressed: () => _scrollToSection(_projectsKey),
+            icon: LucideIcons.folder,
+          ),
+          FabRoute(
+            label: 'Contato',
+            onPressed: () => _scrollToSection(_contactKey),
+            icon: LucideIcons.mail,
+          ),
+        ];
+        if (loggedIn) {
+          items.add(
+            FabRoute(
+              label: 'Admin',
+              route: '/admin',
+              icon: LucideIcons.settings,
+            ),
+          );
+        }
+        return items;
+      }(),
       body: SafeArea(
         child: SingleChildScrollView(
           controller: _scrollController,
@@ -137,60 +153,91 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with Validator {
                 vertical: 48.0,
               ),
               child: ref
-                  .watch(homeContentProvider)
+                  .watch(homeContentStreamProvider)
                   .when(
-                    data: (content) => Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        // Seção Hero
-                        Padding(
-                          key: _heroKey,
-                          padding: const EdgeInsets.symmetric(vertical: 40),
-                          child: HeroCard(
-                            content: content["hero"],
-                            onPrimaryPressed: () =>
-                                _scrollToSection(_projectsKey),
-                            onSecondaryPressed: () =>
-                                _scrollToSection(_contactKey),
+                    data: (content) {
+                      // Garantir que content não é null e tem estrutura esperada
+                      if (content.isEmpty) {
+                        return const Center(
+                          child: Text('Nenhum conteúdo disponível'),
+                        );
+                      }
+                      
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          // Seção Hero
+                          Padding(
+                            key: _heroKey,
+                            padding: const EdgeInsets.symmetric(vertical: 40),
+                            child: HeroCard(
+                              content: content["hero"] ?? {},
+                              onPrimaryPressed: () =>
+                                  _scrollToSection(_projectsKey),
+                              onSecondaryPressed: () =>
+                                  _scrollToSection(_contactKey),
+                            ),
                           ),
-                        ),
 
-                        // Seção Sobre
-                        Padding(
-                          key: _aboutKey,
-                          padding: const EdgeInsets.symmetric(vertical: 40),
-                          child: _buildAboutSection(theme, content["about"]),
-                        ),
-
-                        // Seção Habilidades
-                        Padding(
-                          key: _skillsKey,
-                          padding: const EdgeInsets.symmetric(vertical: 40),
-                          child: _buildSkillsSection(theme, content["skills"]),
-                        ),
-
-                        // Seção Projetos
-                        Padding(
-                          key: _projectsKey,
-                          padding: const EdgeInsets.symmetric(vertical: 40),
-                          child: _buildProjectsSection(
-                            theme,
-                            content["projects"],
+                          // Seção Sobre
+                          Padding(
+                            key: _aboutKey,
+                            padding: const EdgeInsets.symmetric(vertical: 40),
+                            child: _buildAboutSection(theme, content["about"] ?? {}),
                           ),
-                        ),
 
-                        // Seção Contato
-                        Padding(
-                          key: _contactKey,
-                          padding: const EdgeInsets.symmetric(vertical: 40),
-                          child: _buildContactSection(theme, content["links"]),
-                        ),
-                      ],
-                    ),
+                          // Seção Habilidades
+                          Padding(
+                            key: _skillsKey,
+                            padding: const EdgeInsets.symmetric(vertical: 40),
+                            child: _buildSkillsSection(theme, content["skills"] ?? {}),
+                          ),
+
+                          // Seção Projetos
+                          Padding(
+                            key: _projectsKey,
+                            padding: const EdgeInsets.symmetric(vertical: 40),
+                            child: _buildProjectsSection(
+                              theme,
+                              content["projects"] ?? {},
+                            ),
+                          ),
+
+                          // Seção Contato
+                          Padding(
+                            key: _contactKey,
+                            padding: const EdgeInsets.symmetric(vertical: 40),
+                            child: _buildContactSection(theme, content["links"] ?? []),
+                          ),
+                        ],
+                      );
+                    },
                     loading: () => const CircularProgressIndicator(),
                     error: (Object error, StackTrace stackTrace) {
-                      return SizedBox.shrink();
+                      return Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(
+                              Icons.error_outline,
+                              size: 64,
+                              color: Colors.red,
+                            ),
+                            const SizedBox(height: 16),
+                            const Text(
+                              'Erro ao carregar conteúdo',
+                              style: TextStyle(fontSize: 18),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              error.toString(),
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(fontSize: 12),
+                            ),
+                          ],
+                        ),
+                      );
                     },
                   ),
             ),
@@ -205,7 +252,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with Validator {
       padding: const EdgeInsets.symmetric(vertical: 4.0),
       child: Row(
         children: [
-          Text('• ', style: theme.textTheme.bodyLarge),
+          Text('- ', style: theme.textTheme.bodyLarge),
           Expanded(child: Text(text)),
         ],
       ),
@@ -240,7 +287,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with Validator {
     }).toList();
 
     return Column(
-      key: _contactKey,
       children: [
         Text('Contato', style: theme.textTheme.headlineMedium),
         const SizedBox(height: 24),
@@ -294,7 +340,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with Validator {
           ),
         ),
         const SizedBox(height: 24),
-        // Ícones de redes sociais
+        // Ãcones de redes sociais
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           spacing: 12,
@@ -309,7 +355,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with Validator {
     Map<String, dynamic> aboutContent,
   ) {
     return Column(
-      key: _aboutKey,
       children: [
         const SizedBox(height: 40),
         Text(
@@ -337,7 +382,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with Validator {
     final List<dynamic> skills = skillsContent["items"] as List<dynamic>? ?? [];
 
     return Column(
-      key: _skillsKey,
       children: [
         const SizedBox(height: 40),
         Text(title, style: theme.textTheme.headlineMedium),
@@ -376,14 +420,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with Validator {
 
         for (final project in projects)
           ProjectCard(
-            title: project["title"] ?? 'Título do Projeto',
-            description: project["description"] ?? 'Descrição do Projeto',
+            title: project["title"] ?? 'TÃ­tulo do Projeto',
+            description: project["description"] ?? 'DescriÃ§Ã£o do Projeto',
           ),
       ],
     );
   }
 
-  // Renomeei a função para refletir que ela não lida mais diretamente com o Dio
+  // Renomeei a funÃ§Ã£o para refletir que ela nÃ£o lida mais diretamente com o Dio
   Future<void> _submitContactForm() async {
     if (!_formKey.currentState!.validate()) return;
 

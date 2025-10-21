@@ -12,6 +12,7 @@
 .swiftpm/
 migrate_working_dir/
 /.vscode
+/design_pilots/
 
 # IntelliJ related
 *.iml
@@ -44,3 +45,26 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Local runbook (não versionar - apenas template)
+# RUNBOOK.md
+
+# Firebase secrets
+scripts/serviceAccount.json
+.firebaserc
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Test coverage
+coverage/
+test/.test_coverage.dart
+
+# IDE
+.vscode/
+.idea/

@@ -1,9 +1,18 @@
 import 'package:flutter/material.dart';
 
-class FabAction {
+class FabAction extends StatelessWidget {
   final IconData? icon;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final String label;
 
-  FabAction({this.icon, required this.onPressed, required this.label});
+  const FabAction({super.key, this.icon, this.onPressed, required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    return FloatingActionButton.extended(
+      onPressed: onPressed,
+      label: Text(label),
+      icon: icon != null ? Icon(icon) : null,
+    );
+  }
 }
