@@ -222,6 +222,35 @@ O projeto tem CI/CD configurado. A cada push na `main`:
 
 ---
 
+## 🔒 Segurança
+
+### Firebase Web API Keys
+
+As chaves Firebase no código (`lib/firebase_options.dart`) são **públicas por design** e não representam risco de segurança. O Firebase protege seus dados através de:
+
+- **Firebase Security Rules** (definidas em `firestore.rules`)
+- **Firebase Authentication** com claims personalizadas
+- **Firebase App Check** (recomendado para produção)
+
+**Importante:** 
+- ✅ As chaves Web API são expostas no browser e isso é normal
+- ✅ Segurança é garantida pelas Security Rules, não pela ocultação das chaves
+- ✅ Nunca commite `serviceAccount.json` ou arquivos `.env` com secrets reais
+
+Para mais informações, veja:
+- [Documentação de Segurança](docs/SECURITY.md)
+- [Guia de Rotação de Chaves](docs/REMOVER_INFORMACOES_SENSIVEIS.md)
+
+### Verificar Segurança
+
+Execute o script de verificação:
+
+```bash
+./scripts/check-for-secrets.sh
+```
+
+---
+
 ## ❗ Problemas Comuns
 
 ### 1. "Home não atualiza após publicar no admin"
@@ -279,6 +308,8 @@ Para desenvolvedores que desejam entender a arquitetura e decisões técnicas:
 - [Bugs Corrigidos](docs/BUGS_CORRIGIDOS.md)
 - [Guia de Contribuição](docs/CONTRIBUTING.md)
 - [Runbook Técnico](docs/RUNBOOK.md)
+- [Segurança e Firebase](docs/SECURITY.md)
+- [Remover Informações Sensíveis](docs/REMOVER_INFORMACOES_SENSIVEIS.md)
 
 ---
 
