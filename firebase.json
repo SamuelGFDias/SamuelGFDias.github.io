@@ -1,1 +1,8 @@
-{"functions":{"source":"functions"},"firestore":{"rules":"firestore.rules"},"flutter":{"platforms":{"dart":{"lib/firebase_options.dart":{"projectId":"YOUR_PROJECT_ID","configurations":{"web":"YOUR_APP_ID"}}}}}}
+{
+  "functions": {
+    "source": "functions"
+  },
+  "firestore": {
+    "rules": "firestore.rules"
+  }
+}
