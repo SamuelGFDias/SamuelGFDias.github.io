@@ -45,7 +45,7 @@ final homeContentStreamProvider = StreamProvider<Map<String, dynamic>>((
   
   // Modo local: carregar do assets
   try {
-    const homeContentPath = "assets/contents/home.json";
+    const homeContentPath = 'assets/contents/home.json';
     final String s = await rootBundle.loadString(homeContentPath);
     final content = json.decode(s) as Map<String, dynamic>;
     yield content;

@@ -51,7 +51,7 @@ class MyApp extends ConsumerWidget {
       scaffoldMessengerKey: UiHelpers.messageGlobalKey,
       localizationsDelegates: [
         FirebaseUILocalizations.withDefaultOverrides(
-          PtBrFirebaseUILocalizations(),
+          const PtBrFirebaseUILocalizations(),
         ),
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,

@@ -20,7 +20,7 @@ class GoRouterRefreshStream extends ChangeNotifier {
 
 final routerProvider = Provider<GoRouter>((ref) {
   final auth = ref.watch(firebaseAuthProvider);
-  final authState = ref.watch(authStateProvider);
+  final _ = ref.watch(authStateProvider);
   final isAdminState = ref.watch(isAdminProvider);
 
   return GoRouter(
