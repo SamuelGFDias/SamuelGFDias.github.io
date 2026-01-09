@@ -1,0 +1,64 @@
+# Nome do Workflow
+name: Build and Deploy Flutter Web to GitHub Pages
+
+# Gatilho: rodar sempre que houver um push na branch 'main'
+on:
+  push:
+    branches: [main]
+  # Permite rodar manualmente pela aba Actions
+  workflow_dispatch:
+
+# Permissões para o token do GitHub
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Permite apenas um deploy concorrente
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  # Job para construir o app
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      # MUDANÇA: Adicionado --web-renderer canvaskit para forçar um renderizador mais consistente.
+      # Isso geralmente resolve o problema da tela branca.
+      - name: Build web app
+        run: flutter build web --release --base-href "/" --dart-define=USE_FIRESTORE=false --dart-define=USE_FUNCTIONS=false
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # O diretório que será publicado
+          path: ./build/web
+
+  # Job para fazer o deploy
+  deploy:
+    # Adiciona a necessidade do job 'build' terminar com sucesso
+    needs: build
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

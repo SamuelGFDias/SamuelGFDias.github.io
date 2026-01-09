@@ -1,0 +1,11 @@
+{
+  "name": "portifolio-functions",
+  "private": true,
+  "main": "index.js",
+  "engines": { "node": "20" },
+  "type": "commonjs",
+  "dependencies": {
+    "firebase-admin": "^12.0.0",
+    "firebase-functions": "^5.0.1"
+  }
+}

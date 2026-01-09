@@ -1,0 +1,95 @@
+{
+    "hero": {
+        "title": "Desenvolvedor Full Stack",
+        "subtitle": "Especialista em .NET, Flutter, SQL e soluções escaláveis"
+    },
+    "about": {
+        "title": "Sobre mim",
+        "description": "Sou um desenvolvedor de software apaixonado por transformar desafios complexos em soluções eficientes e elegantes, com foco em back-ends robustos e experiências mobile intuitivas. Tenho experiência prática no ecossistema .NET, construindo e otimizando APIs RESTful seguras e escaláveis com C#, Entity Framework e Dapper, além de integrações complexas com sistemas como o ERP Sankhya. No universo mobile e web, utilizo Flutter e Dart para entregar interfaces multiplataforma responsivas, com arquitetura modular que favorece manutenção e escalabilidade. Também aplico práticas de CI/CD, como no meu próprio portfólio Flutter Web, onde configurei pipelines GitHub Actions para build e deploy contínuos no GitHub Pages. Busco constantemente aprimorar meus conhecimentos e contribuir em projetos desafiadores que unam inovação, qualidade e impacto real."
+    },
+    "skills": {
+        "title": "Habilidades",
+        "items": [
+            {
+                "skill": "Frontend",
+                "items": [
+                    "Flutter + Riverpod",
+                    "UI/UX responsivo",
+                    "Integração com APIs REST",
+                    "Arquitetura modular e escalável"
+                ]
+            },
+            {
+                "skill": "Backend",
+                "items": [
+                    ".NET",
+                    "C#",
+                    "APIs RESTful",
+                    "Entity Framework",
+                    "Dapper",
+                    "Clean Architecture",
+                    "Princípios SOLID"
+                ]
+            },
+            {
+                "skill": "Banco de Dados",
+                "items": [
+                    "SQL Server",
+                    "Otimização de consultas",
+                    "CTEs",
+                    "Indexação"
+                ]
+            },
+            {
+                "skill": "Automações",
+                "items": [
+                    "Python",
+                    "Integrações entre sistemas",
+                    "Processos de background (HangFire)"
+                ]
+            },
+            {
+                "skill": "BI",
+                "items": [
+                    "Power BI",
+                    "Excel avançado",
+                    "Análise de indicadores"
+                ]
+            }
+        ]
+    },
+    "projects": {
+        "title": "Projetos",
+        "items": [
+            {
+                "title": "Automação de PDFs e E-mails",
+                "description": "Utilitário em Python desenvolvido para automatizar a separação e organização de documentos a partir de um PDF com múltiplos registros. A solução utiliza OCR e expressões regulares (regex) para identificar e extrair valores com base em padrões pré-definidos no documento. O usuário pode fornecer uma planilha contendo dados complementares (como cidade, região ou ambos) associados a cada documento numerado, e definir uma hierarquia de destino com base nas colunas disponíveis. A ferramenta recria automaticamente essa estrutura de diretórios na pasta de saída, agrupando os PDFs individuais gerados de acordo com os agrupadores informados. O processamento, que antes era manual e demorava horas, passou a ser realizado em menos de 5 minutos, garantindo ganho de produtividade e precisão no resultado."
+            },
+            {
+                "title": "Inove API – App Móvel para Gestão de Ordens, Logística e Estoque",
+                "description": "Aplicativo Flutter criado para conectar equipes técnicas e logísticas ao ERP Sankhya, resolvendo desafios de trabalho em campo. Permite visualizar e fechar ordens de serviço com formulários, fotos e assinatura como validação — mesmo offline; gerenciar entregas com seleção de pedidos por rota, assinatura e envio de e-mail com comprovante PDF; consultar estoque volante, receber itens transferidos com registro de divergências e histórico de movimentação; e baixar PDFs de notas fiscais vinculadas à rota, garantindo acesso mesmo sem conexão."
+            },
+            {
+                "title": "Portfólio Pessoal (Flutter Web)",
+                "description": "Site de portfólio responsivo construído em Flutter, com gerenciamento de estado via Riverpod, navegação com GoRouter, temas claro/escuro, botões flutuantes personalizados e seções Sobre/Habilidades/Projetos/Contato com formulário de contato. Estruturado para manutenção e escalabilidade. Conta com pipeline automatizado via GitHub Actions, configurado para ser acionado a cada push na branch principal, realizando o build do Flutter Web, geração dos artefatos otimizados e publicação automática no GitHub Pages. Esse fluxo garante que cada alteração no código esteja disponível online de forma contínua e confiável, sem intervenção manual."
+            }
+        ]
+    },
+    "links": [
+        {
+            "icon": "mail",
+            "url": "mailto:samudias48@gmail.com",
+            "tooltip": "Email"
+        },
+        {
+            "icon": "linkedin",
+            "url": "https://www.linkedin.com/in/SamuelGFDias",
+            "tooltip": "LinkedIn"
+        },
+        {
+            "icon": "github",
+            "url": "https://github.com/samuelgfdias",
+            "tooltip": "GitHub"
+        }
+    ]
+}
